@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: blackjack
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/blackjack   # Ajusta si usas otro puerto/DB
+
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/blackjack  # host:puerto/base_de_datos
+    username: root                                # <-- tu usuario MySQL
+    password: password                            # <-- tu contraseña
+    pool:
+      enabled: true
+      initial-size: 5
+      max-size: 20
+
+# Opcional: cambia el puerto si quieres
+# server:
+#   port: 8080
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui
