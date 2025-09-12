@@ -29,7 +29,7 @@ public class Game {
     private String id;
 
     /** Jugador asociado a la partida (id en MySQL). */
-    private String playerId;
+    private Long playerId;;
 
     /** Mazo restante (las cartas que aún no han salido). */
     private List<Card> deck;
