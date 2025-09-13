@@ -24,11 +24,9 @@ public class PlayerService {
         String name = sanitizeName(request.getName());
 
         return playerRepository.findByName(name)
-                .flatMap(existing -> Mono.error(new IllegalStateException("player name already exists")))
-                .switchIfEmpty(
-                        playerRepository.save(Player.builder().name(name).build())
-                                .map(playerMapper::toView)
-                );
+                .flatMap(existing -> Mono.<Player>error(new IllegalStateException("player name already exists")))
+                .switchIfEmpty(playerRepository.save(Player.builder().name(name).build()))
+                                .map(playerMapper::toView);
     }
 
     /** Renombrar jugador, verificando que el nuevo nombre no exista */
@@ -36,16 +34,16 @@ public class PlayerService {
         String newName = sanitizeName(request.getNewName());
 
         return playerRepository.findByName(newName)
-                .flatMap(exists -> Mono.error(new IllegalStateException("player name already exists")))
+                .flatMap(existing -> Mono.<Player>error(new IllegalStateException("player name already exists")))
                 .switchIfEmpty(
                         playerRepository.findById(playerId)
                                 .switchIfEmpty(Mono.error(new NoSuchElementException("player not found")))
-                                .flatMap(player -> {
-                                    player.setName(newName);
-                                    return playerRepository.save(player);
+                                .flatMap(p -> {
+                                    p.setName(newName);
+                                    return playerRepository.save(p);
                                 })
-                                .map(playerMapper::toView)
-                );
+                )
+                                .map(playerMapper::toView);
     }
 
     /** Limpieza de espacios en nombres */
