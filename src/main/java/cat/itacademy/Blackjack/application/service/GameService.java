@@ -5,10 +5,11 @@ import cat.itacademy.Blackjack.application.mapper.GameMapper;
 import cat.itacademy.Blackjack.dto.CreateGameRequest;
 import cat.itacademy.Blackjack.dto.GameResponse;
 import cat.itacademy.Blackjack.dto.PlayRequest;
-import cat.itacademy.Blackjack.model.Card;
-import cat.itacademy.Blackjack.model.Game;
-import cat.itacademy.Blackjack.model.GameResult;
-import cat.itacademy.Blackjack.model.Hand;
+import cat.itacademy.Blackjack.error.GameAlreadyFinished;
+import cat.itacademy.Blackjack.error.GameNotFound;
+import cat.itacademy.Blackjack.error.InvalidAction;
+import cat.itacademy.Blackjack.error.PlayerNotFound;
+import cat.itacademy.Blackjack.model.*;
 import cat.itacademy.Blackjack.model.enums.Action;
 import cat.itacademy.Blackjack.model.enums.GameStatus;
 import cat.itacademy.Blackjack.model.enums.Winner;
@@ -22,6 +23,8 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+
+
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +42,7 @@ public class GameService {
         Long playerId = request.getPlayerId();
 
         return playerRepository.findById(playerId)
-                .switchIfEmpty(Mono.error(new NoSuchElementException("player not found")))
+                .switchIfEmpty(Mono.<Player>error(new PlayerNotFound(playerId)))
                 .flatMap(player -> {
                     // Preparar baraja y manos
                     List<Card> deck = gameLogic.createShuffledDeck();
@@ -73,13 +76,18 @@ public class GameService {
 
     public Mono<GameResponse> getGame(String gameId) {
         return gameRepository.findById(gameId)
-                .switchIfEmpty(Mono.error(new NoSuchElementException("game not found")))
+                .switchIfEmpty(Mono.error(new GameNotFound(gameId)))
                 .map(gameMapper::toResponse);
     }
 
     public Mono<Void> deleteGame(String gameId) {
-        return gameRepository.deleteById(gameId);
+        return gameRepository.findById(gameId)
+                .switchIfEmpty(Mono.error(new GameNotFound(gameId)))
+                .flatMap(existing -> gameRepository.deleteById(gameId));
     }
+
+
+
 
     // ====================== JUGAR ========================
 
@@ -88,18 +96,21 @@ public class GameService {
         Action action = request.getAction();
 
         return gameRepository.findById(gameId)
-                .switchIfEmpty(Mono.error(new NoSuchElementException("game not found")))
+                .switchIfEmpty(Mono.error(new GameNotFound(gameId))) // 👉 personalizado
                 .flatMap(game -> {
                     if (game.getStatus() == GameStatus.FINISHED) {
-                        return Mono.error(new IllegalStateException("game already finished"));
+                        return Mono.error(new GameAlreadyFinished(gameId)); // 👉 personalizado
                     }
                     return switch (action) {
                         case HIT -> playHit(game);
                         case STAND -> playStand(game);
+                        // Si algún día añadimos acción inválida (ej. "DOUBLE"), lanzamos InvalidAction
+                        default -> Mono.error(new InvalidAction(action.name()));
                     };
                 })
                 .map(gameMapper::toResponse);
     }
+
 
     // ------------------ Acciones internas ------------------
 
