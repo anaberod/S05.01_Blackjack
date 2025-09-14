@@ -5,6 +5,7 @@ import cat.itacademy.Blackjack.dto.CreateGameRequest;
 import cat.itacademy.Blackjack.dto.GameResponse;
 import cat.itacademy.Blackjack.dto.PlayRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -24,6 +25,7 @@ public class GameController {
      * POST /game/new
      */
     @PostMapping("/new")
+    @ResponseStatus(HttpStatus.CREATED)
     public Mono<GameResponse> createGame(@RequestBody CreateGameRequest request) {
         return gameService.createGame(request);
     }

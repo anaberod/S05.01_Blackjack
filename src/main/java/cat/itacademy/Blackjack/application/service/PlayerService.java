@@ -19,30 +19,37 @@ public class PlayerService {
     private final PlayerMapper playerMapper;
 
     /** Crear un jugador nuevo con nombre único */
-    public Mono<PlayerView> createPlayer(CreatePlayerRequest request) {
-        String name = sanitizeName(request.getName());
+    public Mono<PlayerView> createPlayer(CreatePlayerRequest req) {
+        final String name = req.getName();
 
         return playerRepository.findByName(name)
-                .flatMap(existing -> Mono.<Player>error(new IllegalStateException("player name already exists")))
-                .switchIfEmpty(playerRepository.save(Player.builder().name(name).build()))
-                .map(playerMapper::toView);
+                // Si EXISTE, error
+                .flatMap(p -> Mono.<PlayerView>error(new IllegalStateException("player name already exists")))
+                // Si NO existe, creamos (¡nada de null aquí!)
+                .switchIfEmpty(Mono.defer(() ->
+                        playerRepository.save(Player.builder().name(name).build())
+                                .map(playerMapper::toView)
+                ));
     }
 
     /** Renombrar jugador, verificando que el nuevo nombre no exista */
-    public Mono<PlayerView> renamePlayer(Long playerId, PlayerRenameRequest request) {
-        String newName = sanitizeName(request.getNewName());
+    public Mono<PlayerView> renamePlayer(Long id, PlayerRenameRequest req) {
+        final String newName = req.getNewName();
 
         return playerRepository.findByName(newName)
-                .flatMap(exists -> Mono.<Player>error(new IllegalStateException("player name already exists")))
-                .switchIfEmpty(
-                        playerRepository.findById(playerId)
-                                .switchIfEmpty(Mono.<Player>error(new PlayerNotFound(playerId)))
-                                .flatMap(p -> {
-                                    p.setName(newName);
-                                    return playerRepository.save(p);
+                // Si el nuevo nombre ya existe → error
+                .flatMap(p -> Mono.<PlayerView>error(new IllegalStateException("player name already exists")))
+                // Si no existe ese nombre, seguimos con el renombrado
+                .switchIfEmpty(Mono.defer(() ->
+                        playerRepository.findById(id)
+                                // Ajusta la excepción al tipo que quieras testear
+                                .switchIfEmpty(Mono.error(new PlayerNotFound(id)))
+                                .flatMap(existing -> {
+                                    existing.setName(newName);
+                                    return playerRepository.save(existing);
                                 })
-                )
-                .map(playerMapper::toView);
+                                .map(playerMapper::toView)
+                ));
     }
     /** Limpieza de espacios en nombres */
     private String sanitizeName(String raw) {
