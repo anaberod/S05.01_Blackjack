@@ -1,4 +1,4 @@
-package cat.itacademy.Blackjack.repository;
+package cat.itacademy.Blackjack.repository.mongo;
 
 import cat.itacademy.Blackjack.model.Game;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;

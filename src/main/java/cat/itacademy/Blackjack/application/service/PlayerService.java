@@ -6,7 +6,7 @@ import cat.itacademy.Blackjack.dto.PlayerRenameRequest;
 import cat.itacademy.Blackjack.dto.PlayerView;
 import cat.itacademy.Blackjack.error.PlayerNotFound;
 import cat.itacademy.Blackjack.model.Player;
-import cat.itacademy.Blackjack.repository.PlayerRepository;
+import cat.itacademy.Blackjack.repository.sql.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;

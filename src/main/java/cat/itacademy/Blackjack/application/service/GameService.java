@@ -13,17 +13,15 @@ import cat.itacademy.Blackjack.model.*;
 import cat.itacademy.Blackjack.model.enums.Action;
 import cat.itacademy.Blackjack.model.enums.GameStatus;
 import cat.itacademy.Blackjack.model.enums.Winner;
-import cat.itacademy.Blackjack.repository.GameRepository;
-import cat.itacademy.Blackjack.repository.GameResultRepository;
-import cat.itacademy.Blackjack.repository.PlayerRepository;
+import cat.itacademy.Blackjack.repository.mongo.GameRepository;
+import cat.itacademy.Blackjack.repository.sql.GameResultRepository;
+import cat.itacademy.Blackjack.repository.sql.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-
 
 
 @Service

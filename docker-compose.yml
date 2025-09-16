@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: blackjack
+      MYSQL_USER: blackjack
+      MYSQL_PASSWORD: blackpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-prootpass", "--protocol=TCP"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand( { ping: 1 } ).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  app:
+    image: blackjack-api:local   # la imagen que construiste
+    container_name: blackjack-api
+    depends_on:
+      mysql:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    environment:
+      # Overwrite limpio de Spring con variables de entorno:
+      SPRING_R2DBC_URL: r2dbc:mysql://mysql:3306/blackjack?ssl=false
+      SPRING_R2DBC_USERNAME: blackjack
+      SPRING_R2DBC_PASSWORD: blackpass
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/blackjack
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/blackjack?allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: blackjack
+      SPRING_DATASOURCE_PASSWORD: blackpass
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+volumes:
+  mysql_data:
+  mongo_data:

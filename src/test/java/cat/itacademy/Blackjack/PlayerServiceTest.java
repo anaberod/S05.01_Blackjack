@@ -7,7 +7,7 @@ import cat.itacademy.Blackjack.dto.PlayerRenameRequest;
 import cat.itacademy.Blackjack.dto.PlayerView;
 import cat.itacademy.Blackjack.error.PlayerNotFound;
 import cat.itacademy.Blackjack.model.Player;
-import cat.itacademy.Blackjack.repository.PlayerRepository;
+import cat.itacademy.Blackjack.repository.sql.PlayerRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,8 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;

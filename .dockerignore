@@ -1,0 +1,22 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+*.iml
+
+# Maven
+target/*
+!target/*.jar
+!.mvn/wrapper/maven-wrapper.jar
+.mvn
+mvnw
+mvnw.cmd
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Docs
+README.md

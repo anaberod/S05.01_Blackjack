@@ -4,22 +4,40 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://localhost:27017/blackjack   # Ajusta si usas otro puerto/DB
+      uri: mongodb://localhost:27017/blackjack
 
   r2dbc:
-    url: r2dbc:mysql://localhost:3306/blackjack  # host:puerto/base_de_datos
-    username: root                                # <-- tu usuario MySQL
-    password: password                            # <-- tu contraseña
+    url: r2dbc:mysql://localhost:3306/blackjack?sslMode=DISABLED&allowPublicKeyRetrieval=true
+    username: blackjack
+    password: blackjack
     pool:
       enabled: true
-      initial-size: 5
-      max-size: 20
+      initial-size: 1
+      max-size: 10
+      validation-query: SELECT 1
+      validation-depth: remote
+      max-idle-time: 30s
+      max-life-time: 30m
 
-# Opcional: cambia el puerto si quieres
-# server:
-#   port: 8080
+  flyway:
+    enabled: true
+    url: jdbc:mysql://localhost:3306/blackjack?allowPublicKeyRetrieval=true&useSSL=false
+    user: blackjack
+    password: blackjack
+
 springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
-    path: /swagger-ui
+    path: /swagger-ui.html
+
+logging:
+  level:
+    io.asyncer.r2dbc.mysql: DEBUG
+    org.springframework.r2dbc: DEBUG
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: ALWAYS
+

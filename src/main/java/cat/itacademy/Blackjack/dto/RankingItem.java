@@ -18,8 +18,6 @@ public class RankingItem {
     private Long playerId;
     private String playerName;
     private int wins;     // número de partidas ganadas
-
-    // opcionales, si quisieras enriquecer el ranking
     private int losses;   // número de derrotas
     private int draws;    // número de empates
 }
