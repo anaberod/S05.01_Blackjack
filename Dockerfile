@@ -1,15 +1,24 @@
-# Imagen base con Java 21
-FROM eclipse-temurin:21-jdk
+# ---------- 1) BUILD STAGE ----------
+FROM maven:3.9-eclipse-temurin-21 AS build
+WORKDIR /src
 
+COPY pom.xml .
+RUN mvn -q -DskipTests dependency:go-offline
 
-# Directorio de trabajo en el contenedor
+COPY src ./src
+RUN mvn -q -DskipTests package
+
+# ---------- 2) RUNTIME STAGE ----------
+FROM eclipse-temurin:21-jre
+RUN useradd -r -u 1001 appuser
 WORKDIR /app
 
-# Copiar el jar generado en target/
-COPY target/*jar app.jar
+COPY --from=build /src/target/*-SNAPSHOT.jar /app/app.jar
+RUN chown -R appuser:appuser /app
+USER appuser
 
-# Exponer el puerto de la aplicación
 EXPOSE 8080
+ENV JAVA_OPTS=""
+ENV SPRING_PROFILES_ACTIVE="default"
 
-# Comando para ejecutar el JAR
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["sh","-c","exec java $JAVA_OPTS -jar /app/app.jar"]

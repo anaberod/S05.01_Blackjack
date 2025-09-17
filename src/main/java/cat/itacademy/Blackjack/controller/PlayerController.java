@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,7 @@ public class PlayerController {
             @ApiResponse(responseCode = "201", description = "Successfully created player"),
             @ApiResponse(responseCode = "400", description = "Invalid data or duplicate name")
     })
-    public Mono<PlayerView> createPlayer(@RequestBody CreatePlayerRequest request) {
+    public Mono<PlayerView> createPlayer(@RequestBody @Valid CreatePlayerRequest request) {
         return playerService.createPlayer(request);
     }
 

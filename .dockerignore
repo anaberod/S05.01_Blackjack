@@ -2,21 +2,16 @@
 .git
 .gitignore
 
-# IDE
+# IDE / OS
 .idea
 *.iml
+.vscode/
+.DS_Store
 
 # Maven
-target/*
-!target/*.jar
-!.mvn/wrapper/maven-wrapper.jar
-.mvn
-mvnw
-mvnw.cmd
+target/
+!target/*.jar        # opcional: incluir jar final
 
-# Docker
-Dockerfile
-.dockerignore
+# Logs
+*.log
 
-# Docs
-README.md

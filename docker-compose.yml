@@ -35,16 +35,18 @@ services:
     restart: unless-stopped
 
   app:
-    image: blackjack-api:local   # la imagen que construiste
+    image: blackjack-api:local   # etiqueta que le pondrá
     container_name: blackjack-api
+    build:
+      context: .                 # ruta donde está tu Dockerfile
+      dockerfile: Dockerfile     # nombre del Dockerfile
     depends_on:
       mysql:
         condition: service_healthy
       mongo:
         condition: service_healthy
     environment:
-      # Overwrite limpio de Spring con variables de entorno:
-      SPRING_R2DBC_URL: r2dbc:mysql://mysql:3306/blackjack?ssl=false
+      SPRING_R2DBC_URL: r2dbc:mysql://mysql:3306/blackjack?sslMode=DISABLED&allowPublicKeyRetrieval=true
       SPRING_R2DBC_USERNAME: blackjack
       SPRING_R2DBC_PASSWORD: blackpass
       SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/blackjack
@@ -54,6 +56,7 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
+
 volumes:
   mysql_data:
   mongo_data:
