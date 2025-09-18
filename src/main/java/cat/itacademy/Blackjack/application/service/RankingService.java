@@ -16,19 +16,17 @@ import java.util.Comparator;
 @RequiredArgsConstructor
 public class RankingService {
 
-    private final GameResultRepository gameResultRepository; // Histórico (MySQL R2DBC)
-    private final PlayerRepository playerRepository;         // Jugadores (MySQL R2DBC)
-    private final GameResultMapper gameResultMapper;         // Construye RankingItem
+    private final GameResultRepository gameResultRepository;
+    private final PlayerRepository playerRepository;
+    private final GameResultMapper gameResultMapper;
 
-    /**
-     * Devuelve el ranking completo, ordenado por número de victorias (descendente).
-     */
+
     public Flux<RankingItem> getRanking() {
         return gameResultRepository.findAll()
-                .collectMultimap(GameResult::getPlayerId)                      // Map<Long, Collection<GameResult>>
+                .collectMultimap(GameResult::getPlayerId)
                 .flatMapMany(resultsByPlayer ->
-                        playerRepository.findAllById(resultsByPlayer.keySet())     // Cargar nombres
-                                .collectMap(Player::getId, Player::getName)            // Map<Long, String>
+                        playerRepository.findAllById(resultsByPlayer.keySet())
+                                .collectMap(Player::getId, Player::getName)
                                 .flatMapMany(idToName ->
                                         Flux.fromStream(
                                                 resultsByPlayer.entrySet().stream()

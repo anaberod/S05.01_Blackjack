@@ -4,10 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-/**
- * Petición para crear un jugador nuevo.
- * Se usa en el endpoint POST /player.
- */
+
 @Data
 public class CreatePlayerRequest {
 

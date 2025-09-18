@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/player") // prefijo común para el recurso jugador
+@RequestMapping("/player")
 @RequiredArgsConstructor
 @Tag(name = "Player", description = "Player-related endpoints")
 public class PlayerController {
@@ -23,7 +23,7 @@ public class PlayerController {
     private final PlayerService playerService;
 
 
-    /** Crear un nuevo jugador: POST /player -> 201 Created */
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Create new player")
@@ -35,7 +35,7 @@ public class PlayerController {
         return playerService.createPlayer(request);
     }
 
-    /** Renombrar un jugador existente: PUT /player/{id} -> 200 OK */
+
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Rename a player")

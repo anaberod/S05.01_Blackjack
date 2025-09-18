@@ -32,26 +32,26 @@ class PlayerServiceTest {
 
     @Test
     void createPlayer_success_whenNameIsUnique() {
-        // given
+
         CreatePlayerRequest req = new CreatePlayerRequest();
         req.setName("Ana");
 
-        // nombre libre
+
         when(playerRepository.findByName("Ana")).thenReturn(Mono.empty());
-        // guardar devuelve el mismo Player con id asignado
+
         when(playerRepository.save(any(Player.class)))
                 .thenAnswer(inv -> {
                     Player p = inv.getArgument(0, Player.class).toBuilder().id(11L).build();
                     return Mono.just(p);
                 });
-        // mapper Player -> View
+
         when(playerMapper.toView(any(Player.class)))
                 .thenAnswer(inv -> {
                     Player p = inv.getArgument(0, Player.class);
                     return PlayerView.builder().id(p.getId()).name(p.getName()).build();
                 });
 
-        // when
+
         Mono<PlayerView> out = playerService.createPlayer(req);
 
         // then
@@ -67,17 +67,17 @@ class PlayerServiceTest {
 
     @Test
     void createPlayer_fails_whenNameAlreadyExists() {
-        // given
+
         CreatePlayerRequest req = new CreatePlayerRequest();
         req.setName("Ana");
 
         when(playerRepository.findByName("Ana"))
                 .thenReturn(Mono.just(Player.builder().id(1L).name("Ana").build()));
 
-        // when
+
         Mono<PlayerView> out = playerService.createPlayer(req);
 
-        // then
+
         StepVerifier.create(out)
                 .expectErrorSatisfies(ex -> assertTrue(ex instanceof IllegalStateException))
                 .verify();
@@ -106,10 +106,10 @@ class PlayerServiceTest {
                     return PlayerView.builder().id(p.getId()).name(p.getName()).build();
                 });
 
-        // when
+
         Mono<PlayerView> out = playerService.renamePlayer(playerId, req);
 
-        // then
+
         StepVerifier.create(out)
                 .expectNextMatches(v -> v.getId().equals(playerId) && v.getName().equals("Ana Maria"))
                 .verifyComplete();
@@ -123,37 +123,36 @@ class PlayerServiceTest {
 
     @Test
     void renamePlayer_fails_whenPlayerNotFound() {
-        // given
+
         Long playerId = 99L;
         var req = new PlayerRenameRequest();
         req.setNewName("Nuevo");
 
-        // nombre libre
+
         when(playerRepository.findByName("Nuevo")).thenReturn(Mono.empty());
-        // jugador NO existe
+
         when(playerRepository.findById(playerId)).thenReturn(Mono.empty());
 
-        // when
+
         Mono<PlayerView> out = playerService.renamePlayer(playerId, req);
 
-        // then
+
         StepVerifier.create(out)
                 .expectErrorSatisfies(ex -> {
-                    // ajusta al tipo REAL que lanza tu servicio
+
                     assertTrue(ex instanceof PlayerNotFound);
-                    // opcional: comprobar el mensaje
-                    // assertTrue(ex.getMessage().contains(playerId.toString()));
+
                 })
                 .verify();
 
         verify(playerRepository).findByName("Nuevo");
         verify(playerRepository).findById(playerId);
-        verifyNoMoreInteractions(playerRepository, playerMapper); // no se guarda ni se mapea
+        verifyNoMoreInteractions(playerRepository, playerMapper);
     }
 
     @Test
     void renamePlayer_fails_whenNewNameAlreadyExists() {
-        // given
+
         Long playerId = 3L;
         PlayerRenameRequest req = new PlayerRenameRequest();
         req.setNewName("Ana");
@@ -161,10 +160,10 @@ class PlayerServiceTest {
         when(playerRepository.findByName("Ana"))
                 .thenReturn(Mono.just(Player.builder().id(1L).name("Ana").build()));
 
-        // when
+
         Mono<PlayerView> out = playerService.renamePlayer(playerId, req);
 
-        // then
+
         StepVerifier.create(out)
                 .expectErrorSatisfies(ex -> assertTrue(ex instanceof IllegalStateException))
                 .verify();

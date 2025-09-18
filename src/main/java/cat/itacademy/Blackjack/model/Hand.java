@@ -33,7 +33,7 @@ public class Hand {
 
     @Override
     public boolean equals(Object o) {
-        // Dos manos son iguales si contienen las mismas cartas
+
         if (this == o) return true;
         if (!(o instanceof Hand)) return false;
         Hand hand = (Hand) o;
@@ -42,7 +42,7 @@ public class Hand {
 
     @Override
     public int hashCode() {
-        // Genera un hash en base a la lista de cartas
+
         return Objects.hash(cards);
     }
 }

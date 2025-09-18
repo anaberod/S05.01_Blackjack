@@ -8,7 +8,7 @@ import reactor.core.publisher.Flux;
 @Repository
 public interface GameResultRepository extends R2dbcRepository<GameResult, Long> {
 
-    // Todos los resultados históricos de un jugador (para ranking)
+
     Flux<GameResult> findByPlayerId(Long playerId);
 
 

@@ -10,11 +10,7 @@ import java.util.Collection;
 @Component
 public class GameResultMapper {
 
-    /**
-     * Construye un RankingItem a partir de:
-     * - playerId y playerName (ya resuelto por el servicio)
-     * - la colección de resultados del jugador (wins/losses/draws)
-     */
+
     public RankingItem toRankingItem(Long playerId, String playerName, Collection<GameResult> results) {
         int wins = 0, losses = 0, draws = 0;
 

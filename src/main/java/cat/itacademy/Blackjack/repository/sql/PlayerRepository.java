@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface PlayerRepository extends R2dbcRepository<Player, Long> {
 
-    // --- PROYECCIONES A DTO (PlayerView) ---
+
     @Query("""
            SELECT id AS id, name AS name
            FROM players
@@ -27,7 +27,7 @@ public interface PlayerRepository extends R2dbcRepository<Player, Long> {
            """)
     Mono<PlayerView> findViewById(@Param("id") Long id);
 
-    // --- ENTIDAD (si la necesitas en otros puntos) ---
+
     @Query("""
            SELECT id, name,
                   created_at AS createdAt,
@@ -46,7 +46,7 @@ public interface PlayerRepository extends R2dbcRepository<Player, Long> {
            """)
     Mono<Player> findByName(@Param("name") String name);
 
-    // --- UPDATE solo toca name y updated_at (nunca created_at) ---
+
     @Modifying
     @Query("""
            UPDATE players

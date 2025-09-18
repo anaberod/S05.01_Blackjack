@@ -34,26 +34,25 @@ class PlayerControllerTest {
     void setup() {
         webTestClient = WebTestClient
                 .bindToController(controller)
-                // si tienes GlobalExceptionHandler, puedes añadirlo:
-                // .controllerAdvice(new GlobalExceptionHandler())
+
                 .build();
     }
 
     @Test
     void createPlayer_returns201_andBody() {
-        // given
+
         CreatePlayerRequest req = new CreatePlayerRequest();
         req.setName("Ana");
 
         PlayerView returned = PlayerView.builder()
-                .id(11L)                // OJO: Long, no long
+                .id(11L)
                 .name("Ana")
                 .build();
 
         when(playerService.createPlayer(any(CreatePlayerRequest.class)))
                 .thenReturn(Mono.just(returned));
 
-        // when + then
+
         webTestClient.post()
                 .uri("/player")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -68,7 +67,7 @@ class PlayerControllerTest {
 
     @Test
     void renamePlayer_returns200_andBody() {
-        // given
+
         Long id = 7L;
 
         var renameReq = new cat.itacademy.Blackjack.dto.PlayerRenameRequest();
@@ -82,7 +81,7 @@ class PlayerControllerTest {
         when(playerService.renamePlayer(id, renameReq))
                 .thenReturn(Mono.just(returned));
 
-        // when + then
+
         webTestClient.put()
                 .uri("/player/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)

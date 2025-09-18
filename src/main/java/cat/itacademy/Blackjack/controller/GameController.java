@@ -15,10 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-/**
- * Controlador REST para gestionar partidas de Blackjack.
- * Expone endpoints para crear, consultar y jugar partidas.
- */
+
 
 @Tag(name = "Game", description = "game endpoints")
 @RestController
@@ -28,10 +25,7 @@ public class GameController {
 
     private final GameService gameService;
 
-    /**
-     * Crear una nueva partida para un jugador existente.
-     * POST /game/new
-     */
+
     @Operation(summary = "Create new game", description = "Start a single-player blackjack game.If there is a natural blackjack, the game is closed immediately. ")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Game created",
@@ -44,10 +38,7 @@ public class GameController {
         return gameService.createGame(request);
     }
 
-    /**
-     * Consultar una partida por su ID.
-     * GET /game/{id}
-     */
+
     @Operation(summary = "Get game by id",description = "Returns the current state of a game")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "OK",
@@ -59,10 +50,7 @@ public class GameController {
         return gameService.getGame(id);
     }
 
-    /**
-     * Realizar una jugada (HIT o STAND).
-     * POST /game/{id}/play
-     */
+
     @Operation(summary = "Play action", description = "Execute a move (HIT o STAND) in the game")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Update status",

@@ -17,17 +17,17 @@ public class GameMapper {
 
     private final GameLogic gameLogic;
 
-    /** Mapea el modelo interno Game al DTO de salida GameResponse. */
+
     public GameResponse toResponse(Game game) {
         boolean finished = game.getStatus() == GameStatus.FINISHED;
 
-        // Player hand (siempre visible)
+
         GameResponse.HandView playerView = GameResponse.HandView.builder()
                 .cards(toCardViews(game.getPlayerHand().getCards()))
                 .value(gameLogic.handValue(game.getPlayerHand()))
                 .build();
 
-        // Dealer hand: si no ha terminado, muestra 1 carta y oculta la otra; si terminó, muestra todo
+
         List<GameResponse.CardView> dealerCardsView = new ArrayList<>();
         int dealerValue = 0;
 
@@ -57,7 +57,7 @@ public class GameMapper {
                 .build();
     }
 
-    // -------- helpers de mapeo de cartas --------
+
 
     private List<GameResponse.CardView> toCardViews(List<Card> cards) {
         List<GameResponse.CardView> out = new ArrayList<>(cards.size());

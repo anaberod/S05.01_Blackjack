@@ -9,10 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * Respuesta que devuelve el estado de una partida de Blackjack.
- * Se usa en GET /game/{id}, POST /game/new y POST /game/{id}/play.
- */
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -26,9 +23,7 @@ public class GameResponse {
     private HandView playerHand;
     private HandView dealerHand;
 
-    /**
-     * Representación simplificada de una mano.
-     */
+
     @Data
     @Builder
     @NoArgsConstructor
@@ -38,9 +33,7 @@ public class GameResponse {
         private int value;
     }
 
-    /**
-     * Representación simplificada de una carta.
-     */
+
     @Data
     @Builder
     @NoArgsConstructor

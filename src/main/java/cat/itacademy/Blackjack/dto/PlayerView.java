@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Respuesta simplificada de un jugador.
- * Solo muestra la información básica: id y nombre.
- */
+
 @Data
 @Builder
 @NoArgsConstructor

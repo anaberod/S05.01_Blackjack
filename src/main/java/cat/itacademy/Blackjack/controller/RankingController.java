@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
-/**
- * Controlador REST para exponer el ranking de jugadores.
- */
+
 @Tag(name = "Ranking", description = "Check the ranking by number of victories")
 @RestController
 @RequestMapping("/ranking")
@@ -23,10 +21,7 @@ public class RankingController {
 
     private final RankingService rankingService;
 
-    /**
-     * Obtener el ranking de jugadores ordenado por victorias.
-     * GET /ranking
-     */
+
     @Operation(summary = "Get ranking", description = "Returns the list of players sorted by wins (descending).")
     @ApiResponse(
             responseCode = "200",

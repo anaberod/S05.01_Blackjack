@@ -18,7 +18,7 @@ public class PlayerService {
 
     private final PlayerRepository playerRepository;
 
-    /** Crear jugador con nombre único (devuelve PlayerView directo) */
+
     public Mono<PlayerView> createPlayer(CreatePlayerRequest req) {
         final String name = sanitizeName(req.getName());
         if (name == null || name.isBlank()) {
@@ -48,7 +48,7 @@ public class PlayerService {
                         return Mono.just(current);
                     }
 
-                    // ¿Existe ese nombre en otro jugador?
+
                     return playerRepository.findViewByName(newName)
                             .flatMap(existing -> {
                                 // Si existe y NO es el mismo id -> conflicto

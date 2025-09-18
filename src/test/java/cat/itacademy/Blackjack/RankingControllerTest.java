@@ -38,11 +38,11 @@ class RankingControllerTest {
                 RankingItem.builder().playerId(2L).playerName("Bea").wins(1).build()
         );
 
-        // Si tu servicio devuelve Flux<RankingItem>, usa: when(rankingService.getRanking()).thenReturn(Flux.fromIterable(data));
+
         when(rankingService.getRanking()).thenReturn(Flux.fromIterable(data));
 
         webTestClient.get()
-                .uri("/ranking") // ajusta si tu controller mapea a otra ruta/base path
+                .uri("/ranking")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
